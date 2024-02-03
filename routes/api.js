@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const adminController = require('../controllers/adminController')
 const postController = require('../controllers/postController')
+const commentController = require('../controllers/commentController')
 const app = express();
 require("dotenv").config()
 const jwt = require("jsonwebtoken");
@@ -50,4 +51,15 @@ router.patch('/posts/:id', verifyToken, verifyAdmin, postController.one_update)
 // Delete one post
 router.delete('/posts/:id', verifyToken, verifyAdmin, postController.one_delete)
 
+// Get all comments
+router.get('/posts/:id/comments', commentController.list )
+
+// Add comment
+router.post('/posts/:id/comments', commentController.new_comment)
+
+// Update comment
+router.patch('/posts/:id/comments/:commentid', verifyToken, verifyAdmin, commentController.update_comment)
+
+//Delete comment
+router.delete('/posts/:id/comments/:commentid', verifyToken, verifyAdmin, commentController.remove_comment)
 module.exports = router;

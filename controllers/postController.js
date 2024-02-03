@@ -33,9 +33,9 @@ exports.one_update = asyncHandler(async(req,res,next) => {
 })
 
 exports.one_create = [
-    body("title").trim().isLength({min:4}).escape(),
-    body("text").trim().isLength({min:1}).escape(),
-    body("date").isLength({min:1}).escape(),
+    body("title", "Title should be at least 4 characters").trim().isLength({min:4}).escape(),
+    body("text", "Post's content should be specified").trim().isLength({min:1}).escape(),
+    body("date", "Date must be specified").isLength({min:1}).escape(),
     body("visible").optional().escape(),
     
     asyncHandler(async(req,res,next) => {

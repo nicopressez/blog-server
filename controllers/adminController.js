@@ -8,7 +8,7 @@ require("dotenv").config()
 
 
 exports.signup = [
-    body("username", "Invalid username")
+    body("username", "Username must be specified")
         .trim()
         .isLength({min: 1})
         .escape()
@@ -16,14 +16,14 @@ exports.signup = [
             try {
                 const existingUsername = await Admin.findOne({username:username}).exec();
                 if (existingUsername) {
-                    throw new Error("username already in use")
+                    throw new Error("Username already in use")
                 }
                 return true;
             } catch(err) {
                 throw new Error("Error in username validation")
             }
         }),
-    body("password", "Password invalid").isLength({min: 6}),
+    body("password", "Password must be 6 characters minimum").isLength({min: 6}),
     body("confirm-password", "Passwords don't match").custom((value, { req }) => {
         if (value !==req.body.password){
             return next("Passwords don't match")
