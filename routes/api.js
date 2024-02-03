@@ -45,6 +45,9 @@ router.get('/posts/:id', postController.one_get)
 router.post('/posts',verifyToken, verifyAdmin,postController.one_create )
 
 // Update one post
-router.post('/posts/:id/update', verifyToken, verifyAdmin, postController.one_update)
+router.patch('/posts/:id', verifyToken, verifyAdmin, postController.one_update)
+
+// Delete one post
+router.delete('/posts/:id', verifyToken, verifyAdmin, postController.one_delete)
 
 module.exports = router;

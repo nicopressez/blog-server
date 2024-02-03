@@ -13,7 +13,23 @@ exports.one_get = asyncHandler(async(req,res,next) => {
 })
 
 exports.one_update = asyncHandler(async(req,res,next) => {
-   
+   const post = await Post.findById(req.params.id).exec()
+   try {
+   if (req.body.title !== post.title) {
+    await Post.findByIdAndUpdate(req.params.id, {title: req.body.title}).exec()
+   }
+   if (req.body.text !== post.text) {
+    await Post.findByIdAndUpdate(req.params.id, {text: req.body.text}).exec()
+   }
+   if (req.body.date !== post.date) {
+    await Post.findByIdAndUpdate(req.params.id, {date: req.body.date}).exec()
+   }
+   if (req.body.visible !== post.visible) {
+    await Post.findByIdAndUpdate(req.params.id, {visible: req.body.visible}).exec()
+    return res.sendStatus(200)
+   }} catch (err) {
+    if(err) return res.status(400).json({message: "Error in update"})
+   }
 })
 
 exports.one_create = [
@@ -39,6 +55,9 @@ exports.one_create = [
 })]
 
 exports.one_delete = asyncHandler(async(req,res,next) => {
-
+    const post = await Post.findById(req.params.id).exec();
+    if (!post) return res.sendStatus(404);
+    await Post.findByIdAndDelete(req.params.id).exec();
+    return res.status(200).json({message: "Post deleted"})
 })
 
