@@ -1,3 +1,4 @@
+require('dotenv').config()
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -5,16 +6,28 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const asyncHandler = require("express-async-handler");
 
-
-
 //Mongo setup
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
-const mongoDB = "";
+const mongoDB = process.env.DATABASE;
 main().catch((err) => console.log(err));
 async function main() {
   await mongoose.connect(mongoDB);
 }
+
+// Passport setup
+const passport = require("./passport");
+
+app.use(session({
+  secret: process.env.SECRET, 
+  resave: false,
+  saveUninitialized: true,
+}));
+
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 
 

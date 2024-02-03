@@ -5,6 +5,7 @@ const PostSchema = new mongoose.Schema({
     text: {type: String, minLength: 4, required:true},
     date: {type: Date, required:true},
     visible: {type: Boolean, default: false},
+    comments: [{type: mongoose.Schema.Types.ObjectId, ref:"Comment"}]
 });
 
 module.exports = mongoose.model("Post", PostSchema);
