@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs")
 const Admin = require('../models/admin');
 const { body, validationResult } = require("express-validator");
 const asyncHandler = require('express-async-handler');
+require("dotenv").config()
 
 
 exports.signup = [
@@ -46,10 +47,24 @@ exports.signup = [
 })]
 
 
-exports.login = asyncHandler(async(req,res,next) => {
+exports.login = [
+    passport.authenticate("local"),
+    asyncHandler(async(req,res,next) => {
+        const user = req.user.username;
+        const isAdmin = req.user.admin;
+        const secret = process.env.SECRET;
+        const token = jwt.sign({ user, isAdmin}, secret, { expiresIn: "24h"});
+        return res.status(200).json({
+            message: "Auth passed",
+            token
+        })
 
-})
+})]
 
 exports.logout = asyncHandler(async(req,res,next) => {
-    
+    req.logout((err) => {
+        if (err) return res.status(500).json({message: "Can't log out"})
+        res.status(200).json({message: "Logged out successful"})
+    }
+    )
 })

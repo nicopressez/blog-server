@@ -1,6 +1,7 @@
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require('bcryptjs');
+const Admin = require('./models/admin')
 
 passport.use(new LocalStrategy(
     async (username, password, done) => {
@@ -34,5 +35,6 @@ passport.serializeUser((user, done) => {
       done(err);
     }
   });
+  
   
   module.exports = passport;
