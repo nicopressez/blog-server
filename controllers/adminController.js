@@ -64,7 +64,7 @@ exports.login = [
 exports.logout = asyncHandler(async(req,res,next) => {
     req.logout((err) => {
         if (err) return res.status(500).json({message: "Can't log out"})
-        res.status(200).json({message: "Logged out successful"})
+        res.status(200).json({message: "Log out successful"})
     }
     )
 })

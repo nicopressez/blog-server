@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const adminController = require('../controllers/adminController')
+const postController = require('../controllers/postController')
 const app = express();
 require("dotenv").config()
 const jwt = require("jsonwebtoken");
@@ -15,28 +16,35 @@ const verifyToken  = (req,res,next) => {
    return res.status(404).json({message: "Error in token verification"})
   }
 }
+
+const verifyAdmin = (req,res,next) => {
+  jwt.verify(req.token, process.env.SECRET, (err, data) => {
+    if(err) return res.status(404).json("Problem with JWT verification");
+    else if (!data.isAdmin) return res.status(403).json({message: "forbidden"})
+    else next()
+    })
+   
+}
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
 
+// Authentication routes
 router.post('/signup', adminController.signup)
-
 router.post('/login', adminController.login)
-
 router.post('/logout', adminController.logout)
 
-router.post('/private', verifyToken, (req,res,next) => {
-   jwt.verify(req.token, process.env.SECRET, (err, data) => {
-    if(err) return res.status(404).json("Problem with JWT verification");
-    else {
-      if (!data.isAdmin) return res.status(403).json({message: "forbidden"})
-      res.json({
-        message: "Authorized",
-        data,
-      })
-    }
-   })
-})
+// Get all posts
+router.get('/posts', postController.list)
+
+// Get one post
+router.get('/posts/:id', postController.one_get)
+
+// Create one post
+router.post('/posts',verifyToken, verifyAdmin,postController.one_create )
+
+// Update one post
+router.post('/posts/:id/update', verifyToken, verifyAdmin, postController.one_update)
 
 module.exports = router;
