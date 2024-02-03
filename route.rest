@@ -1,0 +1,9 @@
+POST http://localhost:3000/api/signup
+
+Content-Type: application/json
+
+{
+    "username": "niconewtest",
+    "password": "porche69",
+    "confirm-password": "porche69"
+}
