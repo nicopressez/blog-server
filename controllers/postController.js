@@ -12,8 +12,20 @@ exports.one_get = asyncHandler(async(req,res,next) => {
    res.status(200).json(post);
 })
 
-exports.one_update = asyncHandler(async(req,res,next) => {
+exports.one_update = [
+    body("title", "Title should be at least 4 characters").trim().isLength({min:4}).escape(),
+    body("text", "Post's content should be specified").trim().isLength({min:1}).escape(),
+    body("date", "Date must be specified").isLength({min:1}).escape(),
+    body("visible").optional().escape(),
+
+    asyncHandler(async(req,res,next) => {
+   const errors = validationResult(req)
    const post = await Post.findById(req.params.id).exec()
+
+   if(!errors.isEmpty()){
+    return res.status(400).json({errors:  errors.array()})
+   }
+
    try {
    if (req.body.title !== post.title) {
     await Post.findByIdAndUpdate(req.params.id, {title: req.body.title}).exec()
@@ -26,11 +38,11 @@ exports.one_update = asyncHandler(async(req,res,next) => {
    }
    if (req.body.visible !== post.visible) {
     await Post.findByIdAndUpdate(req.params.id, {visible: req.body.visible}).exec()
-    return res.sendStatus(200)
+    return res.status(200).json({message: "Success"})
    }} catch (err) {
     if(err) return res.status(400).json({message: "Error in update"})
    }
-})
+})]
 
 exports.one_create = [
     body("title", "Title should be at least 4 characters").trim().isLength({min:4}).escape(),

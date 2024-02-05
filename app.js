@@ -7,6 +7,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const asyncHandler = require("express-async-handler");
 const app = express();
+var cors = require('cors')
 //Mongo setup
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
@@ -18,6 +19,8 @@ async function main() {
 
 // Passport setup
 const passport = require("./passport");
+
+app.use(cors())
 
 app.use(session({
   secret: process.env.SECRET, 

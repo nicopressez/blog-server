@@ -40,7 +40,7 @@ exports.update_comment = asyncHandler(async(req,res,next) => {
     if(comment.date !== req.body.date) {
         await Comment.findByIdAndUpdate(req.params.commentid, {date: req.params.date}).exec()
     }
-    return res.sendStatus(200)
+    res.sendStatus(200)
 })
 
 // Delete one comment
